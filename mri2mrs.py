@@ -2,7 +2,6 @@
 
 from plumbum import cli, FG
 from plumbum.cmd import rm, bet, fslmaths, fast, fslswapdim, fslstats, ConvertBetweenFileFormats, matlab, Slicer
-from subprocess import check_output
 import os
 
 
