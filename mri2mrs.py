@@ -1,24 +1,45 @@
 #!/usr/bin/env python
 
 from plumbum import cli, FG
-from plumbum.cmd import rm, bet, fslmaths, fast, fslswapdim, fslstats, ConvertBetweenFileFormats, matlab, Slicer
+from plumbum.cmd import rm, bet, fslmaths, fast, fslswapdim, fslstats, \
+    ConvertBetweenFileFormats, matlab, ImageMath, Slicer, antsApplyTransforms
 import os
+
+
+def run_command(command, arguments):
+
+    command_line= f'{command}.run({arguments}, retcode=None)'
+
+    # log the command
+    log(command_line)
+
+    # execute the command
+    retcode, stdout, stderr= eval(command_line)
+
+    if retcode==0:
+        log(stdout)
+
+    else:
+        log(f'{command_line} failed.')
+        log(stderr)
+        exit(1)
 
 
 def log(msg):
     print(msg)
     f.write(msg+'\n')
 
-
-def externalOutput(retcode, stdout, stderr):
-
-    if not retcode:
-        print(stderr)
-    else:
-        log(stdout)
-
 def warpDim(mri):
-    fslswapdim[mri, 'LR', 'PA', 'IS', mri] & FG
+
+    try:
+        fslswapdim[mri, 'LR', 'PA', 'IS', mri] & FG
+
+    except:
+    
+        fslswapdim[mri, 'RL', 'PA', 'IS', mri] & FG
+
+
+
 
 
 def createMRSmask(segment, MRSregion, MRSmask):
@@ -28,7 +49,7 @@ def createMRSmask(segment, MRSregion, MRSmask):
 
 def calcVol(region):
     vols= fslstats(region, '-V')
-    return vols.strip(' ').split(' ')[0]
+    return float(vols.strip(' ').split(' ')[1])
 
 class MRS(cli.Application):
     """Calculates brain and white matter volumes given an MRS (Magnetic Resonance Spectroscopy)
@@ -114,8 +135,8 @@ class MRS(cli.Application):
 
         if self.mask:
             log('Creating mask and multiplying the input image by mask ...')
-            bet_mask= self.case+'-t1w-mask.nii.gz'
-            ((bet[convertedImg, bet_mask, '-m -n -f', self.betThreshold] ) >> logFile)()
+            bet_mask= self.case+'_mask.nii.gz' # bet names the mask like this
+            bet[convertedImg, self.case, '-m', '-n', '-f', self.betThreshold] & FG
 
             processedImg = self.case + '-t1w-bet.nii.gz'
             fslmaths[convertedImg, '-mul', bet_mask, processedImg] & FG
@@ -149,35 +170,44 @@ class MRS(cli.Application):
         # TODO: Check with Ofer if he wants unprocessed image as the first argument
         ((ConvertBetweenFileFormats[processedImg, compatibleImg] ) >> logFile)()
 
-        try:
-            regionPrefix = self.region
-            log('Defining MRS on T1 image using MATLAB ...')
 
-            retcode, stdout, stderr= matlab.run(['-singleCompThread', '-nojvm', '-nosplash', '-r',
-                   "addpath {}, MRStoAnatomy(\'{}\', \'{}\', \'{}\', \'{}_mask\'), exit"
-                   .format(scriptDir, 'tmp-sb.nhdr', compatibleImg, self.labelMap, regionPrefix)])
-            externalOutput(retcode, stdout, stderr)
+        regionPrefix = self.region
+        log('Defining MRS on T1 image using MATLAB ...')
+        command= 'matlab'
+        arguments= ['-singleCompThread', '-nojvm', '-nosplash', '-r',
+                   "diary(\'{}\'); addpath {}; MRStoAnatomy(\'{}\', \'{}\', \'{}\', \'{}_mask\'); exit"
+                   .format(logFile, scriptDir, 'tmp-sb.nhdr', compatibleImg, self.labelMap, regionPrefix)]
 
+        # Check with Ofer:
+        # Warning: File is not RAS, make sure subsequent matlab processing is consistent!
+        # Warning: File is not RAS, make sure subsequent matlab processing is consistent!
 
-            log('Combining the mask with the zero files to create a mask having same dimensions as that of T1, '
-                'launching Slicer ...')
+        run_command(command, arguments)
 
-            retcode, stdout, stderr= Slicer.run(['--launch', 'AddScalarVolumes',
+        '''
+        # Ofer's original command
+        command= 'Slicer'
+        arguments= ['--launch', 'AddScalarVolumes',
                    self.region+'_mask_zr.nhdr',
                    self.region + '_mask_jm.nhdr',
                    '--order', '0',
-                   self.region + '_mask.nhdr'])
-            externalOutput(retcode, stdout, stderr)
+                   self.region + '_mask.nhdr']
 
-
-        except:
-            log('MRS mask creation failed for {}, exiting ...'.format(self.img))
-            exit(1)
-
+        run_command(command, arguments)
         log("Converting MRS mask to nii ...")
         oldMRSmask= regionPrefix+'_mask.nhdr'
         newMRSmask= regionPrefix+'_mask.nii.gz'
         ((ConvertBetweenFileFormats[oldMRSmask, newMRSmask] ) >> logFile)()
+        '''
+
+        
+        # Isaiah proposed command to replace Slicer
+        resampled= self.region+'_mask_aapt.nhdr'
+        antsApplyTransforms['-i', self.region + '_mask_jm.nhdr', '-r',
+                            self.region+'_mask_zr.nhdr', '-o', resampled] & FG
+        newMRSmask = regionPrefix + '_mask.nii.gz'
+        ImageMath['3', newMRSmask, '+', self.region + '_mask_zr.nhdr', resampled] & FG
+        
 
         warpDim(newMRSmask)
 
@@ -187,11 +217,25 @@ class MRS(cli.Application):
         createMRSmask(gray, newMRSmask, MRSmaskBrain)
         createMRSmask(csf, newMRSmask, MRSmaskWM)
 
-        log('Calculating brain volume ...')
-        log('Brain volume : {}'.format(calcVol(MRSmaskBrain)))
 
-        log('Calculating white matter volume ...')
-        log('White matter volume : {}'.format(calcVol(MRSmaskWM)))
+        brainVol= calcVol(MRSmaskBrain)
+
+        # print ROI volume
+        totVol= calcVol(newMRSmask)
+        log('ROI volume:{}'.format(totVol))
+
+        # print CSF volume
+        csfVol= totVol - brainVol
+        log('CSF volume:{}'.format(csfVol))
+
+        # print WM volume
+        wmVol= calcVol(MRSmaskWM)
+        log('WM volume:{}'.format(wmVol))
+        
+        
+        # print GM volume
+        gmVol= brainVol - wmVol
+        log('GM volume:{}'.format(gmVol))
 
         print('Program finished, see {} for details'.format(logFile))
 
@@ -201,17 +245,3 @@ class MRS(cli.Application):
 if __name__ == '__main__':
     MRS.run()
 
-
-'''
-
-./mri2mrs.py \
--i /rfanfs/pnl-zorro/projects/VA_AcuteTBI/MRIData/RegisteredT1/BIO_0002-registeredT1.nrrd \
--r pcg -c BIO_0002 -m \
--l /rfanfs/pnl-zorro/projects/VA_AcuteTBI/MRIData/MRS_VA_AcuteTBI/BIO_0002/BIO_0002_pcg_press.rda \
--o ~/Downloads/mri2mrs/output_test
-
-Slicer --launch AddScalarVolumes pcg_mask_zr.nhdr pcg_mask_jm.nhdr pcg_mask.nhdr --order 0
-
-retcode, stdout, stderr= matlab.run(['-singleCompThread', '-nojvm', '-nosplash', '-r', "addpath {}, MRStoAnatomy(\'{}\', \'{}\', \'{}\', \'{}_mask\'), exit".format(scriptDir, 'tmp-sb.nhdr', compatibleImg, self.labelMap, regionPrefix)])
-
-'''

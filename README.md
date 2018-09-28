@@ -48,8 +48,28 @@ Switches:
 -i /rfanfs/pnl-zorro/projects/VA_AcuteTBI/MRIData/RegisteredT1/BIO_0002-registeredT1.nrrd \
 -r pcg -c BIO_0002 -m \
 -l /rfanfs/pnl-zorro/projects/VA_AcuteTBI/MRIData/MRS_VA_AcuteTBI/BIO_0002/BIO_0002_pcg_press.rda \
--o ~/mri2mrsOutput
+-o ./mri2mrsOutput
 ```
+
+
+# Parsing output:
+
+In python3:
+with open('logFileName') as f:
+    volume= [line.split(':')[1] for line in f.read().split('\n') if "attr" in line]
+
+You can also do float(volume) if necessary.    
+
+The attr you want to grab are ROI, GM, WM, CSF while the logFileName is your log text file.
+    
+    
+In shell:
+
+volume=`grep "attr" logFileName | awk -F ":" '{print $2}'`
+
+
+
+
 
 
 
