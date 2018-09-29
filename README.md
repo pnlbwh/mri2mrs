@@ -69,11 +69,6 @@ volume=`grep "attr" logFileName | awk -F ":" '{print $2}'`
 
 
 
-# Run test:
-
-./mri2mrs.py -i test_data/A_DTI_axial_20140429161340_4.nii.gz \
--l test_data/SVS_30.rda -c abc -r pcg -o ~/mri2mrs.test -m
-
 
 
 
