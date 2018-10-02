@@ -71,11 +71,18 @@ volume=`grep "attr" logFileName | awk -F ":" '{print $2}'`
 
 # Run test:
 
-./mri2mrs.py -i test_data/A_DTI_axial_20140429161340_4.nii.gz \
--l test_data/SVS_30.rda -c abc -r pcg -o ~/mri2mrs.test -m
+```
+cd test_data
+../mri2mrs.py -i Test_SAG_MPRAGE_1mm_isoa.nii -l MRS_tha_press.rda -c Test -r tha -o ./mri2mrs.test -m
+```
 
+You should see the following output:
 
-
-
+```
+ROI volume:4200.0
+CSF volume:0.0
+WM volume:4172.0
+GM volume:28.0
+```
 
 

@@ -116,7 +116,7 @@ class MRS(cli.Application):
         os.makedirs(self.outDir)
 
 
-        scriptDir= os.getcwd()
+        scriptDir= os.path.dirname(os.path.abspath(__file__))
         os.chdir(self.outDir)
 
         global f, logFile
@@ -174,13 +174,10 @@ class MRS(cli.Application):
         regionPrefix = self.region
         log('Defining MRS on T1 image using MATLAB ...')
         command= 'matlab'
-        arguments= ['-singleCompThread', '-nojvm', '-nosplash', '-r',
-                   "diary(\'{}\'); addpath {}; MRStoAnatomy(\'{}\', \'{}\', \'{}\', \'{}_mask\'); exit"
+        arguments= ['-singleCompThread', '-nojvm', '-nodisplay', '-nosplash', '-r',
+                   'diary(\'{}\'); diary on;  addpath {}; MRStoAnatomy(\'{}\', \'{}\', \'{}\', \'{}_mask\'); diary off; exit'
                    .format(logFile, scriptDir, 'tmp-sb.nhdr', compatibleImg, self.labelMap, regionPrefix)]
 
-        # Check with Ofer:
-        # Warning: File is not RAS, make sure subsequent matlab processing is consistent!
-        # Warning: File is not RAS, make sure subsequent matlab processing is consistent!
 
         run_command(command, arguments)
 
@@ -237,7 +234,7 @@ class MRS(cli.Application):
         gmVol= brainVol - wmVol
         log('GM volume:{}'.format(gmVol))
 
-        print('Program finished, see {} for details'.format(logFile))
+        print('Program finished, see {} for details'.format(os.path.join(self.outDir, logFile)))
 
         os.chdir(scriptDir)
         f.close()
