@@ -10,8 +10,8 @@
 You need a Linux workstation to install and run the `mri2mrs` command line module.
 
 1. `mri2mrs` command line module depends on external commands like
-unu, DWIConvert, ants etc. To build those commands on your machine, 
-follow installation [instruction](https://github.com/pnlbwh/pnlpipe) 1,2,3, and 5 (upto and including ./pnlpipe std setup).
+`unu`, `DWIConvert`, `ants` etc. To build those commands on your machine, 
+follow installation [instruction](https://github.com/pnlbwh/pnlpipe) 1,2,3, and 5 (upto and including `./pnlpipe std setup`).
 
 2. Next, we need to make the external commands available to system path: 
 
