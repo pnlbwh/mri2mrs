@@ -5,6 +5,14 @@
 ![Flowchart](mri2mrs_flowchart.jpg)
 
 
+# Citation
+
+If you use our software in your research, please cite as below:
+
+Tashrif Billah, Isaiah Norton, and Ofer Pasternak, MRI to MRS Tool, https://github.com/pnlbwh/mri2mrs, 2018, 
+Psychiatry Neuroimaging Laboratory, Brigham and Women's Hospital and Harvard Medical School. 
+
+
 # Installation instruction
 
 You need a Linux workstation to install and run the `mri2mrs` command line module.
