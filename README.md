@@ -5,6 +5,45 @@
 ![Flowchart](mri2mrs_flowchart.jpg)
 
 
+# Installation instruction
+
+You need a Linux workstation to install and run the `mri2mrs` command line module.
+
+1. `mri2mrs` command line module depends on external commands like
+unu, DWIConvert, ants etc. To build those commands on your machine, 
+follow installation [instruction](https://github.com/pnlbwh/pnlpipe) 1,2,3, and 5 (upto and including ./pnlpipe std setup).
+
+2. Next, we need to make the external commands available to system path: 
+
+```
+cd path/to/software/dir
+cd BRAINSTools-bin-*
+chmod +x env.sh
+./env.sh
+```
+
+3. From `miniconda3` installation during building pnlpipe, you should have `pip`
+avaialable on your path. Now, install the plumbum package using pip:
+
+`pip install plumbum`
+
+
+4. Install MATLAB (it requires a license). An instruction for installing MATLAB on linux is 
+available [here](https://xunyunliu.github.io/post/install_matlab/).
+
+
+5. Now that all the dependencies are solved, you can clone the `mri2mrs` repository and
+start using it.
+
+```
+git clone https://github.com/pnlbwh/mri2mrs.git
+cd mri2mrs
+```
+
+If the above steps are successful, help message will be correctly displayed:
+`./mri2mrs.py --help`
+
+
 # Program description
 
 ```
@@ -40,6 +79,40 @@ Switches:
 
 ```
 
+# Run test:
+
+
+1. Test data is managed by `git lfs`. One time installation of `git lfs` per machine is required. 
+Install `git lfs` as follows:
+
+[Download](https://git-lfs.github.com/) Git command line extension
+
+```
+tar -xzvf git-lfs-linux-*
+install.sh
+git lfs install
+```
+
+2. Now download the test data:
+`git lfs pull --exclude=`
+
+
+3. Finally, you should be able to run test as follows:
+
+```
+cd test_data
+../mri2mrs.py -i Test_SAG_MPRAGE_1mm_isoa.nii -l MRS_tha_press.rda -c Test -r tha -o ./mri2mrs.test -m
+```
+
+You should see the following output:
+
+```
+ROI volume:4200.0
+CSF volume:0.0
+WM volume:4172.0
+GM volume:28.0
+```
+
 
 # Example execution
 
@@ -55,34 +128,22 @@ Switches:
 # Parsing output:
 
 In python3:
+
+```
 with open('logFileName') as f:
     volume= [line.split(':')[1] for line in f.read().split('\n') if "attr" in line]
+```
 
-You can also do float(volume) if necessary.    
+You can also do `float(volume)` if necessary. 
 
 The attr you want to grab are ROI, GM, WM, CSF while the logFileName is your log text file.
     
     
 In shell:
 
+```
 volume=`grep "attr" logFileName | awk -F ":" '{print $2}'`
-
-
-
-# Run test:
-
-```
-cd test_data
-../mri2mrs.py -i Test_SAG_MPRAGE_1mm_isoa.nii -l MRS_tha_press.rda -c Test -r tha -o ./mri2mrs.test -m
 ```
 
-You should see the following output:
-
-```
-ROI volume:4200.0
-CSF volume:0.0
-WM volume:4172.0
-GM volume:28.0
-```
 
 
