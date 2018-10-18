@@ -30,17 +30,11 @@ chmod +x env.sh
 ./env.sh
 ```
 
-3. From `miniconda3` installation during building pnlpipe, you should have `pip`
-avaialable on your path. Now, install the plumbum package using pip:
-
-`pip install plumbum`
-
-
-4. Install MATLAB (it requires a license). An instruction for installing MATLAB on linux is 
+3. Install MATLAB (it requires a license). An instruction for installing MATLAB on linux is 
 available [here](https://xunyunliu.github.io/post/install_matlab/).
 
 
-5. Now that all the dependencies are solved, you can clone the `mri2mrs` repository and
+4. Now that all the dependencies are solved, you can clone the `mri2mrs` repository and
 start using it.
 
 ```
