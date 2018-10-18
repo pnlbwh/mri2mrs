@@ -87,7 +87,7 @@ Switches:
 1. Test data is managed by `git lfs`. One time installation of `git lfs` per machine is required. 
 Install `git lfs` as follows:
 
-[Download](https://git-lfs.github.com/) Git command line extension
+[Download git-lfs](https://git-lfs.github.com/) command line extension
 
 ```
 tar -xzvf git-lfs-linux-*
