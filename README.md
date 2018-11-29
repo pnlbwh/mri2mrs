@@ -64,8 +64,7 @@ Meta-switches:
 
 Switches:
     -b, --betThreshold VALUE:str           Threshold for bet mask creation; the default is 0.3
-    -c, --caseID VALUE:str                 A T1 image registered in the space of magnetic resonance
-                                           spectroscopy (nrrd or nifti); required
+    -c, --caseID VALUE:str                 case ID; required
     -i, --input VALUE:ExistingFile         A T1 image registered in the space of magnetic resonance
                                            spectroscopy (nrrd or nifti); required
     -l, --labelMap VALUE:ExistingFile      An rda file from the scanner defining label map of a region
