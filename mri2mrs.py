@@ -2,7 +2,7 @@
 
 from plumbum import cli, FG
 from plumbum.cmd import rm, bet, fslmaths, fast, fslswapdim, fslstats, \
-    ConvertBetweenFileFormats, matlab, ImageMath, Slicer, antsApplyTransforms
+    ConvertBetweenFileFormats, matlab, ImageMath, antsApplyTransforms
 import os
 
 
