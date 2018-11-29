@@ -8,7 +8,7 @@ import os
 
 def run_command(command, arguments):
 
-    command_line= f'{command}.run({arguments}, retcode=None)'
+    command_line= '{}.run({}, retcode=None)'.format(command, arguments)
 
     # log the command
     log(command_line)
@@ -20,7 +20,7 @@ def run_command(command, arguments):
         log(stdout)
 
     else:
-        log(f'{command_line} failed.')
+        log('{} failed.'.format(command_line))
         log(stderr)
         exit(1)
 
@@ -66,7 +66,7 @@ class MRS(cli.Application):
 
     case= cli.SwitchAttr(
         ['-c', '--caseID'],
-        help='A T1 image registered in the space of magnetic resonance spectroscopy (nrrd or nifti)',
+        help='case ID',
         mandatory=True)
 
     mask = cli.Flag(
