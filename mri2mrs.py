@@ -144,7 +144,7 @@ class MRS(cli.Application):
         else:
             processedImg= convertedImg
 
-        warpDim(processedImg)
+        # warpDim(processedImg)
 
         log('Segmenting T1 image to white/gray/CSF ...')
         ((fast['-o', 'fast_out', processedImg] ) >> logFile)()
@@ -206,7 +206,7 @@ class MRS(cli.Application):
         ImageMath['3', newMRSmask, '+', self.region + '_mask_zr.nhdr', resampled] & FG
         
 
-        warpDim(newMRSmask)
+        # warpDim(newMRSmask)
 
         log('Creating MRS masks ...')
         MRSmaskBrain= regionPrefix+'_MRS_mask_brain.nii.gz'
