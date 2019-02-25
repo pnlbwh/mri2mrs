@@ -2,7 +2,7 @@
 
 # MRI to MRS project
 
-[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.2576412.svg)](https://doi.org/10.5281/zenodo.2576412) [![Python](https://img.shields.io/badge/Python-2.7%20%7C%203.6-green.svg)]() [![Platform](https://img.shields.io/badge/Platform-linux--64-orange.svg)]() [![License](https://img.shields.io/badge/License-MIT-yellow.svg)]()
+[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.2576656.svg)](https://doi.org/10.5281/zenodo.2576656) [![Python](https://img.shields.io/badge/Python-2.7%20%7C%203.6-green.svg)]() [![Platform](https://img.shields.io/badge/Platform-linux--64-orange.svg)]() [![License](https://img.shields.io/badge/License-MIT-yellow.svg)]()
 
 # Project flowchart
 (Implemented rightmost column)
@@ -13,7 +13,7 @@
 
 If you use our software in your research, please cite as below:
 
-Tashrif Billah, Isaiah Norton, and Ofer Pasternak, MRI to MRS Tool, https://github.com/pnlbwh/mri2mrs, 2018, DOI: 10.5281/zenodo.2576412
+Tashrif Billah, Isaiah Norton, and Ofer Pasternak, MRI to MRS Tool, https://github.com/pnlbwh/mri2mrs, 2018, DOI: 10.5281/zenodo.2576656
  
 
 
