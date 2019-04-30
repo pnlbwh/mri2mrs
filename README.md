@@ -1,8 +1,27 @@
-![](/pnl-bwh-hms.png)
+![](./pnl-bwh-hms.png)
+
+[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.2576656.svg)](https://doi.org/10.5281/zenodo.2576656) [![Python](https://img.shields.io/badge/Python-2.7%20%7C%203.6-green.svg)]() [![Platform](https://img.shields.io/badge/Platform-linux--64-orange.svg)]()
+
+*mri2mrs* repository is developed by Tashrif Billah and Isaiah Norton.
+
+
+Table of Contents
+=================
+
+   * [Combination of MRI and MRS](#combination-of-mri-and-mrs)
+   * [Project flowchart](#project-flowchart)
+   * [Citation](#citation)
+   * [Installation](#installation)
+   * [Usage](#usage)
+   * [Tests](#tests)
+   * [Example execution](#example-execution)
+   * [Parsing output](#parsing-output)
+
+Table of Contents created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)
+
 
 # Combination of MRI and MRS
 
-[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.2576656.svg)](https://doi.org/10.5281/zenodo.2576656) [![Python](https://img.shields.io/badge/Python-2.7%20%7C%203.6-green.svg)]() [![Platform](https://img.shields.io/badge/Platform-linux--64-orange.svg)]() [![License](https://img.shields.io/badge/License-MIT-yellow.svg)]()
 
 # Project flowchart
 (Implemented rightmost column)
@@ -13,11 +32,11 @@
 
 If you use our software in your research, please cite as below:
 
-Tashrif Billah, Isaiah Norton, and Ofer Pasternak, Combining diffusion MRI and MRS, https://github.com/pnlbwh/mri2mrs, 2018, DOI: 10.5281/zenodo.2576656
+Billah, Tashrif; Norton, Isaiah; Pasternak, Ofer; Combining diffusion MRI and MRS, https://github.com/pnlbwh/mri2mrs, 2018, DOI: 10.5281/zenodo.2576656
  
 
 
-# Installation instruction
+# Installation
 
 You need a Linux workstation to install and run the `mri2mrs` command line module.
 
@@ -50,7 +69,7 @@ If the above steps are successful, help message will be correctly displayed:
 `./mri2mrs.py --help`
 
 
-# Program description
+# Usage
 
 ```
 Calculates brain and white matter volumes given an MRS (Magnetic Resonance Spectroscopy)
@@ -84,7 +103,7 @@ Switches:
 
 ```
 
-# Run test:
+# Tests
 
 
 1. Test data is managed by `git lfs`. One time installation of `git lfs` per machine is required. 
@@ -130,7 +149,7 @@ GM volume:28.0
 ```
 
 
-# Parsing output:
+# Parsing output
 
 In python3:
 
