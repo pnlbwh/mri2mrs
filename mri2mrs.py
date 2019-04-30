@@ -61,7 +61,7 @@ class MRS(cli.Application):
     img = cli.SwitchAttr(
         ['-i', '--input'],
         cli.ExistingFile,
-        help='A T1 image registered in the space of magnetic resonance spectroscopy (nrrd or nifti)',
+        help='a T1 image registered in the space of magnetic resonance spectroscopy (nrrd or nifti)',
         mandatory=True)
 
     case= cli.SwitchAttr(
@@ -78,14 +78,14 @@ class MRS(cli.Application):
         default= False)
 
     region = cli.SwitchAttr(
-        ['-r', '--region'],
-        help='Region name (acg, agm, ltemp, pcg, pwm etc.)',
+        ['--roi'],
+        help='region of interest (ROI) name (acg, agm, ltemp, pcg, pwm etc.)',
         mandatory=True)
 
     labelMap= cli.SwitchAttr(
-        ['-l', '--labelMap'],
+        ['--rdaFile'],
         cli.ExistingFile,
-        help='An rda file from the scanner defining label map of a region (acg, agm, ltemp, pcg, pwm etc.)',
+        help='an rda file from the scanner defining coordinates of the ROI (acg, agm, ltemp, pcg, pwm etc.)',
         mandatory=True)
 
     outDir = cli.SwitchAttr(
@@ -96,7 +96,7 @@ class MRS(cli.Application):
 
     betThreshold= cli.SwitchAttr(
         ['-b', '--betThreshold'],
-        help='Threshold for bet mask creation',
+        help='threshold for bet mask creation',
         mandatory=False,
         default='0.3')
 
